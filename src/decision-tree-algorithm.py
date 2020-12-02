@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
+import numpy
 import pydotplus
 
+from matplotlib import pyplot
 from sklearn import tree
 from sklearn.datasets import load_iris
 
@@ -16,7 +18,7 @@ def main():
         [[173, 75], [165, 55], [180, 93]],
         ["man", "woman", "man"],
     )
-    exportDecisionTree("simple.pdf", classifier, ["man", "woman"])
+    exportDecisionTree("simple.pdf", classifier, ["man", "woman"], ["size", "weight"])
 
     # Create a sample to use as an example
     sample = [[179, 80]]
@@ -37,7 +39,9 @@ def main():
         iris_dataset.data,
         iris_dataset.target,
     )
-    exportDecisionTree("iris.pdf", classifier, iris_dataset.target_names)
+    exportDecisionTree(
+        "iris.pdf", classifier, iris_dataset.target_names, iris_dataset.feature_names
+    )
 
     # Use the first item of the dataset as an example for predictions
     sample = iris_dataset.data[:1, :]
@@ -55,7 +59,10 @@ def main():
         max_depth=2,
     )
     exportDecisionTree(
-        "iris-custom-max-depth.pdf", classifier, iris_dataset.target_names
+        "iris-custom-max-depth.pdf",
+        classifier,
+        iris_dataset.target_names,
+        iris_dataset.feature_names,
     )
 
     # Create a tree classifier with the Iris dataset and custom min_samples_leaf parameter
@@ -65,7 +72,10 @@ def main():
         min_samples_leaf=2,
     )
     exportDecisionTree(
-        "iris-custom-min-samples-leaf.pdf", classifier, iris_dataset.target_names
+        "iris-custom-min-samples-leaf.pdf",
+        classifier,
+        iris_dataset.target_names,
+        iris_dataset.feature_names,
     )
 
 
@@ -84,12 +94,15 @@ def createDecisionTreeClassifier(data, target, max_depth=None, min_samples_leaf=
 
 
 # Export the decision tree as a PDF file
-def exportDecisionTree(output_filename, classifier, class_names=None):
+def exportDecisionTree(
+    output_filename, classifier, class_names=None, feature_names=None
+):
     pydotplus.graph_from_dot_data(
         tree.export_graphviz(
             classifier,
             out_file=None,
             class_names=class_names,
+            feature_names=feature_names,
             filled=True,
             special_characters=True,
         )
