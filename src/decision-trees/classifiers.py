@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 
-import numpy
-import pydotplus
-
-from matplotlib import pyplot
 from sklearn import tree
 from sklearn.datasets import load_iris
+
+from utils import exportDecisionTree
 
 
 def main():
@@ -44,7 +42,11 @@ def main():
     )
 
     # Use the first item of the dataset as an example for predictions
-    sample = iris_dataset.data[:1, :]
+    sample = iris_dataset.data[[55]]
+
+    print(
+        f"Iris dataset - Target names: {iris_dataset.target_names}, sample target: {iris_dataset.target[[55]]}"
+    )
 
     print(
         f"Iris dataset - Values: {sample}, decision: {classifier.predict(sample)}, probabilities: {classifier.predict_proba(sample)}"
@@ -65,17 +67,25 @@ def main():
         iris_dataset.feature_names,
     )
 
+    print(
+        f"Iris dataset (max_depth) - Values: {sample}, decision: {classifier.predict(sample)}, probabilities: {classifier.predict_proba(sample)}"
+    )
+
     # Create a tree classifier with the Iris dataset and custom min_samples_leaf parameter
     classifier = createDecisionTreeClassifier(
         iris_dataset.data,
         iris_dataset.target,
-        min_samples_leaf=2,
+        min_samples_leaf=5,
     )
     exportDecisionTree(
         "iris-custom-min-samples-leaf.pdf",
         classifier,
         iris_dataset.target_names,
         iris_dataset.feature_names,
+    )
+
+    print(
+        f"Iris dataset (min_samples_leaf=5) - Values: {sample}, decision: {classifier.predict(sample)}, probabilities: {classifier.predict_proba(sample)}"
     )
 
 
@@ -91,22 +101,6 @@ def createDecisionTreeClassifier(data, target, max_depth=None, min_samples_leaf=
     )
 
     return classifier.fit(data, target)
-
-
-# Export the decision tree as a PDF file
-def exportDecisionTree(
-    output_filename, classifier, class_names=None, feature_names=None
-):
-    pydotplus.graph_from_dot_data(
-        tree.export_graphviz(
-            classifier,
-            out_file=None,
-            class_names=class_names,
-            feature_names=feature_names,
-            filled=True,
-            special_characters=True,
-        )
-    ).write_pdf(output_filename)
 
 
 if __name__ == "__main__":
