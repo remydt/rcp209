@@ -6,11 +6,13 @@ WORKDIR /usr/src/
 RUN apt-get update \
   && apt-get install --yes graphviz \
   && pip3 install --no-cache-dir \
+  Keras \
   matplotlib \
   numpy \
   pydotplus \
   scikit-learn \
-  scipy
+  scipy \
+  tensorflow
 
 # We will use this image in interactive mode
 ENTRYPOINT ["/bin/bash"]
