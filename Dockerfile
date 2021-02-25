@@ -1,4 +1,4 @@
-FROM python:3.8-slim-buster
+FROM tensorflow/tensorflow
 
 WORKDIR /usr/src/
 
@@ -11,8 +11,7 @@ RUN apt-get update \
   numpy \
   pydotplus \
   scikit-learn \
-  scipy \
-  tensorflow
+  scipy
 
 # We will use this image in interactive mode
 ENTRYPOINT ["/bin/bash"]
